@@ -1,2 +1,5 @@
-mido
+pretty_midi
 matplotlib
+tensorflow
+pandas
+seaborn

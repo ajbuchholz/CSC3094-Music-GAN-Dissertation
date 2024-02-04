@@ -1,82 +1,61 @@
-import mido
+import pretty_midi
 import numpy as np
 import matplotlib.pyplot as plt
-from collections import Counter
-from mido import MidiFile, MidiTrack, Message, MetaMessage
-from mido.midifiles.meta import KeySignatureError
-	
-def ticks_to_seconds(ticks, tempo, ticks_per_beat):
-	"""
-	Converts MIDI ticks to seconds based on the specified tempo and ticks per beat.
-
-	Parameters:
-	- ticks (int): The number of ticks to be converted into seconds.
-	- tempo (int): The tempo in microseconds per beat. 
-	- ticks_per_beat (int): The number of ticks per beat, as defined in the MIDI file.
-
-	Returns:
-	- float: The duration in seconds corresponding to the given number of ticks.
-	"""
-	return ticks * tempo / (ticks_per_beat * 1000000)   
-
-def seconds_to_ticks(seconds, tempo, ticks_per_beat):
-	"""
-	Converts seconds to MIDI ticks based on the specified tempo and ticks per beat.
-
-	Parameters:
-	- seconds (int): The number of seconds to be converted into ticks.
-	- tempo (int): The tempo in microseconds per beat. 
-	- ticks_per_beat (int): The number of ticks per beat, as defined in the MIDI file.
-
-	Returns:
-	- float: The number of ticks corresponding to the given duration in seconds.
-	"""
-	return int((seconds * ticks_per_beat * 1000000) / tempo)   
+import pandas as pd
+import seaborn as sns
 
 def normalise_song(midi_file):
-	"""
-	Normalizes MIDI file data into a structured numpy array format.
+    """
+    Normalizes MIDI file data into a structured numpy array format using the pretty_midi library.
 
-	This function processes a MIDI file object, extracting note events, including their start times,
-	and durations, adjusting for tempo changes within the file. It normalizes the timing information
-	from MIDI ticks to seconds, providing a consistent time format across different MIDI files
-	irrespective of their original timing settings.
+    This function processes a MIDI file, extracting note events, including their start times,
+    and durations, adjusting for tempo changes within the file. It normalizes the timing information
+    into seconds, providing a consistent time format across different MIDI files.
 
-	Parameters:
-	- midi_file (MidiFile): The MIDI file object to be processed. This object must have attributes
-	such as 'tracks' and 'ticks_per_beat', and support iteration over MIDI messages within tracks.
+    Parameters:
+    - midi_file_path (str): The path to the MIDI file to be processed.
 
-	Returns:
-	- numpy.ndarray: A numpy array where each row represents a note event. Columns include the note's
-	start time in seconds, the MIDI note number (indicating the pitch), and the note's duration in
-	seconds.
-	"""
-	mid = midi_file
-	notes = []
-	tempo = 500000  # Default MIDI tempo (500,000 microseconds per beat)
-	ticks_per_beat = mid.ticks_per_beat
+    Returns:
+    - numpy.ndarray: A numpy array where each row represents a note event. Columns include the note's
+    start time in seconds, the MIDI note number (indicating the pitch), and the note's duration in
+    seconds.
+    """
+    notes = []
+    for instrument in midi_file.instruments:
+        for note in instrument.notes:
+            start_time = note.start
+            end_time = note.end
+            duration = end_time - start_time
+            notes.append((start_time, note.pitch, duration))
+    notes_array = np.array(notes, dtype=float)
+    return notes_array
 
-	for track in mid.tracks:
-		current_time = 0  # Current time in ticks
-		for msg in track:
-			current_time += msg.time
-			if msg.type == 'set_tempo':
-				tempo = msg.tempo
-			elif msg.type == 'note_on':
-				start_time = ticks_to_seconds(current_time, tempo, ticks_per_beat)
-				notes.append((msg.note, start_time, 0))  # Append note with start time
-			elif msg.type == 'note_off':
-				end_time = ticks_to_seconds(current_time, tempo, ticks_per_beat)
-				for note in notes:
-					if note[0] == msg.note and note[2] == 0:  # Find the note to update its duration
-						notes.remove(note)
-						duration = end_time - note[1]
-						notes.append((msg.note, note[1], duration))
-						break
+def array_to_midi(notes_array, output_midi_file_path="output.mid"):
+    """
+    Converts an array of note information back into a MIDI file using pretty_midi.
 
-	# Convert notes to a numpy array for plotting
-	notes_array = np.array([(note[1], note[0], note[2]) for note in notes])
-	return notes_array
+    Parameters:
+    - notes_array (numpy.ndarray): An array where each row represents a note event with
+      columns for the note's start time in seconds, the MIDI note number (indicating the pitch),
+      and the note's duration in seconds.
+    - output_midi_file_path (str): The path where the generated MIDI file will be saved.
+    """
+    midi_data = pretty_midi.PrettyMIDI()
+    # Create an Instrument instance | 0 refers to the program number for Acoustic Grand Piano.
+    instrument = pretty_midi.Instrument(program=0)
+    
+    for note_info in notes_array:
+        start_time, pitch, duration = note_info
+        end_time = start_time + duration
+        note = pretty_midi.Note(
+            velocity=100,
+            pitch=int(pitch),
+            start=start_time,
+            end=end_time
+        )
+        instrument.notes.append(note)
+    midi_data.instruments.append(instrument)
+    midi_data.write(output_midi_file_path)
 
 def visualise_song(notes_array):
 	"""
@@ -98,108 +77,30 @@ def visualise_song(notes_array):
 	ax.set_title('Piano Roll Visualization')
 	plt.show()
 
+def plot_distributions(notes_array, drop_percentile=2.5):
+    """
+    Plots distributions of pitch, step, and duration from a notes array.
 
-
-
-
-
-
-### WIP (To be completed when model is coded and generates array)
-	
-# def get_number_of_tracks(midi_file):
-# 	try:
-# 		return int(len(midi_file.tracks))
-# 	except KeySignatureError as e:
-# 		return None, e
-	
-# def array_to_midi(notes_array, filename='output.mid', tempo=500000, ticks_per_beat=100, track_number=2):
-# 	"""
-# 	Converts an array of note events back into a MIDI file.
-
-# 	Parameters:
-# 	- notes_array: Array of note events, where each event is a tuple (start_time, pitch, duration).
-# 	- filename: Name of the output MIDI file.
-# 	- tempo: The tempo in microseconds per beat.
-# 	- ticks_per_beat: Resolution of the MIDI file, in ticks per beat.
-# 	"""
-# 	mid = MidiFile(ticks_per_beat=ticks_per_beat)
-# 	track_info = MidiTrack()
-# 	mid.tracks.append(track_info)
-# 	track_info.append(MetaMessage('set_tempo', tempo=tempo))
-
-# 	if track_number == 3:
-# 		track_right = MidiTrack()
-# 		track_left = MidiTrack()   
-# 		mid.tracks.append(track_right)
-# 		mid.tracks.append(track_left)  
-# 		track_right.append(MetaMessage('track_name', name='Right Hand'))
-# 		track_right.append(MetaMessage('channel_prefix', channel=0, time=0))
-# 		track_left.append(MetaMessage('track_name', name='Left Hand'))
-# 		track_left.append(MetaMessage('channel_prefix', channel=1, time=0))
-
-# 		cumulative_time = 0
-# 		last_start_time = 0
-# 		last_index = 0
-# 		for start_time, pitch, duration in notes_array:
-# 			duration_tick = seconds_to_ticks(duration, tempo, ticks_per_beat)
-# 			note_on_time = 0 if cumulative_time == 0 else 0
-# 			track_right.append(Message('note_on', channel=0, note=int(pitch), velocity=100, time=note_on_time))
-# 			track_right.append(Message('note_off', channel=0, note=int(pitch), velocity=0, time=duration_tick))
-# 			if last_start_time <= start_time:
-# 				last_start_time = start_time
-# 				last_index += 1
-# 				print(start_time, last_start_time)
-# 			elif last_start_time > start_time:
-# 				track_right = track_right[:-2]
-# 				break
-# 			cumulative_time += duration_tick
-# 		for _, pitch, duration in notes_array[last_index:]:
-# 			duration_tick = seconds_to_ticks(duration, tempo, ticks_per_beat)
-# 			note_on_time = 0 if cumulative_time == 0 else 0
-# 			track_left.append(Message('note_on', channel=1, note=int(pitch), velocity=100, time=note_on_time))
-# 			track_left.append(Message('note_off', channel=1, note=int(pitch), velocity=0, time=duration_tick))
-# 			cumulative_time += duration_tick
-		
-# 	mid.save(filename)
-
-# if track_number == 3:
-#   track_right = MidiTrack()
-#   track_left = MidiTrack()   
-#   mid.tracks.append(track_right)
-#   mid.tracks.append(track_left)  
-#   track_right.append(MetaMessage('track_name', name='Right Hand'))
-#   track_right.append(MetaMessage('channel_prefix', channel=0, time=0))
-#   track_left.append(MetaMessage('track_name', name='Left Hand'))
-#   track_left.append(MetaMessage('channel_prefix', channel=1, time=0))
-# elif track_number == 2:
-#     track_main = MidiTrack()
-#     mid.tracks.append(track_main)
-#     track_main.append(MetaMessage('track_name', name='Main Track'))
-#     track_main.append(MetaMessage('channel_prefix', channel=0, time=0))
-
-# cumulative_time = 0
-# track = None
-# for note in notes_array:
-#     _, pitch, duration = note
-#     duration_tick = seconds_to_ticks(duration, tempo, ticks_per_beat)
-#     if track_number == 3: track = track_right if pitch >= center_split else track_left
-#     elif track_number == 2: track = track_main
-#     elif track is None: continue
-
-#     note_on_time = 0 if cumulative_time == 0 else 0
-#     # Add the note_on event
-#     if track == track_right:
-#       track_right.append(Message('note_on', channel=0, note=int(pitch), velocity=64, time=note_on_time))
-#       track_right.append(Message('note_off', channel=0, note=int(pitch), velocity=0, time=duration_tick))
-#     elif track == track_left:
-#       track_left.append(Message('note_on', channel=1, note=int(pitch), velocity=64, time=note_on_time))
-#       track_left.append(Message('note_off', channel=1, note=int(pitch), velocity=0, time=duration_tick))
-#     elif track == track_main:
-#       track_main.append(Message('note_on', channel=0, note=int(pitch), velocity=64, time=note_on_time))
-#       track_main.append(Message('note_off', channel=0, note=int(pitch), velocity=0, time=duration_tick))
-	
-#     cumulative_time += duration_tick
-
-# # Save the MIDI file
-# mid.save(filename)
-
+    Parameters:
+    - notes_array (np.ndarray): A numpy array where each row represents a note event,
+      with columns for start time, pitch, and duration.
+    - drop_percentile (float, optional): The percentile of step and duration values to exclude
+      from the high end when plotting. Helps in focusing on the core distribution by removing
+      outliers. Defaults to 2.5.
+    """
+    notes = pd.DataFrame(notes_array, columns=['start_time', 'pitch', 'duration'])
+    notes['step'] = notes['start_time'].diff().fillna(0)
+    plt.figure(figsize=[15, 5])
+    # Plotting pitch distribution
+    plt.subplot(1, 3, 1)
+    sns.histplot(notes, x="pitch", bins=20, kde=False)
+    # Plotting step distribution
+    plt.subplot(1, 3, 2)
+    max_step = np.percentile(notes['step'], 100 - drop_percentile)
+    sns.histplot(notes[notes['step'] <= max_step], x="step", bins=np.linspace(0, max_step, 21), kde=False)
+    # Plotting duration distribution
+    plt.subplot(1, 3, 3)
+    max_duration = np.percentile(notes['duration'], 100 - drop_percentile)
+    sns.histplot(notes[notes['duration'] <= max_duration], x="duration", bins=np.linspace(0, max_duration, 21), kde=False)
+    plt.tight_layout()
+    plt.show()
