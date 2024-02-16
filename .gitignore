@@ -25,3 +25,9 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+
+# Training Checkpoints
+model_weights/
+
+# Output MIDI file
+output.mid
