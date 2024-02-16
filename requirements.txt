@@ -1,5 +1,6 @@
 pretty_midi
 matplotlib
-tensorflow
+tensorflow[and-cuda]
 pandas
 seaborn
+pyarrow
