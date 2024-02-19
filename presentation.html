@@ -12,27 +12,145 @@
 
 		<!-- Theme used for syntax highlighted code -->
 		<link rel="stylesheet" href="plugin/highlight/monokai.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+		<style>
+			li {
+				transition: transform 0.5s ease;
+			}
+
+			.moving {
+				/* Applied temporarily to elements that are moving */
+				transition: transform 0.5s ease;
+			}
+		</style>
 	</head>
 	<body>
 		<div class="reveal">
 			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
+			    <section data-markdown>
+					<textarea data-template>
+					  #### Orchestrating AI: Using Advanced Machine Learning Techniques to Automate Music Generation
+					  <p class="fragment fade-in-then-out" style="font-size: 18px">Adrian Buchholz - 210417616</p>
+					</textarea>
+				</section>
+				
+				<!-- Project Overview -->
+				<section>
+					<section>
+						<h2>Project Overview</h2>
+					</section>
+					<section>
+						<h2>Problem</h2>
+						<ul style="font-size: 22px">
+							<li><p style="font-weight: bold; margin:0;display:inline;float:left; padding-right: 6px;">Music production</p> is a complex and time-consuming process.</li>
+							<li><p style="font-weight: bold; margin:0;display:inline;float:left; padding-right: 6px;">Music production</p> is not begineer friendly and requires a lot of knowledge and expertise.</li>
+							<li><p style="font-weight: bold; margin:0;display:inline;float:left; padding-right: 6px;">Music production</p> is expensive.</li>
+						</ul>
+					</section>
+					<section>
+						<h2>Solution</h2>
+						<p class="fragment fade-in" style="font-size: 30px">Similar to other industries, the musical sector can leverage emerging technological innovation and the latest advancements in AI to address:</p>
+						<ul class=fragment fade-in" style="font-size: 20px">
+							<li>Automated Composition and Arrangement - AI can analyse vast amounts of music to produce similar pieces.</li>
+							<li>Accessible Music Creation Tools - AI can be utilised by those who are just getting into the music industry.</li>
+							<li>Lowers Production Costs - AI can lower the need for expensive equipement</li>
+						</ul>
+					</section>
+					<section>
+						<h2>Project Summary</h2>
+						<div style="display:flex;">
+							<blockquote class="fragment fade-in" style="width:auto; margin: 12px; padding: 24px; font-size: 30px;">
+								The project will focus on the development of a music generation system that leverages advanced machine learning techniques to automate the music production process. Specifically,
+								the project will produce three models: RNN model, GAN Model, and a Tranformer Model. Each model has its own unique approach to music generation and has a set of strengths and weaknesses.
+							</blockquote>
+						</div>
+					</section>
+				</section>
+
+				<!--  Aims & Objectives -->
+				<section>
+					<section>
+						<h2>Hypothesis, Aims, and Objectives</h2>
+					</section>
+					<section>
+						<h2>Hypothesis</h2>
+						<div class="container fragment zoom-in">
+							<div class="image">
+								<img src="https://cdn-icons-png.flaticon.com/512/7690/7690706.png" alt="Hypothesis" style="width: 32%; height: 32%; float: left; filter: invert(100%);">
+							</div>
+							<div class="text">
+							  	<p style="font-size: 26px; text-align: left; padding-left: 350px; padding-top:100px;">
+									Implementing advanced machine learning techniques to music production will lower the barrier of entry for new artists, reduce the cost of production, and help enhance musical producers current creative capabilities and efficiency.
+								</p>
+							</div>
+						</div>
+					</section>
+					<section data-auto-animate>
+						<h2>Aims & Objectives</h2>
+						<ul style="font-size: 18px; list-style: none;">
+							<li><u>Objective #1:</u> Research, identify, and understand how ML models work and how to apply or program them within Python.</li>
+							<li><u>Objective #2:</u> Create a Recurrent Neural Network (RNN) that can “accurately” predict the next note in a sequence.</li>
+							<li><u>Objective #3:</u> Create a GAN using a generator and discriminator that “compete” against one another to create music.</li>
+							<li><u>Objective #4:</u> Modify the GAN model in Goal #3 to work with multiple instruments and genres of music.</li>
+							<li><u>Objective #5:</u> Input the data differently using notes and chords rather than an a list of [pitch, step, duration].</li>
+							<li><u>Objective #6:</u> Create a Transformer model that can generate music by learning the patterns in the music data.</li>
+						</ul>
+					</section>
+					<section data-auto-animate>
+						<h2>Aims & Objectives</h2>
+						<ul style="font-size: 18px; list-style: none;" id="objectivesList">
+							<li><u>Objective #3:</u> Create a GAN using a generator and discriminator that “compete” against one another to create music.</li>
+							<li><u>Objective #4:</u> Modify the GAN model in Goal #3 to work with multiple instruments and genres of music.</li>
+							<li><u>Objective #6:</u> Create a Transformer model that can generate music by learning the patterns in the music data.</li>
+							<li><u>Objective #1:</u> Research, identify, and understand how ML models work and how to apply or program them within Python.</li>
+							<li><u>Objective #2:</u> Create a Recurrent Neural Network (RNN) that can “accurately” predict the next note in a sequence.</li>
+							<li><u>Objective #5:</u> Input the data differently using notes and chords rather than an a list of [pitch, step, duration].</li>
+						</ul>
+					</section>
+					<section data-auto-animate>
+						<h2>Aims & Objectives</h2>
+						<ul style="font-size: 18px; list-style: none; display: inline-block;" id="objectivesList">
+							<div style="display: flex; align-items: center;">
+								<span style="margin-right: 8px;"><i style="color: red;" class="fa-solid fa-x fa-fw"></i></span>
+								<li><u>Objective #3:</u> Create a GAN using a generator and discriminator that “compete” against one another to create music.</li>
+							</div>
+							<div style="display: flex; align-items: center;">
+								<span style="margin-right: 8px;"><i style="color: red;" class="fa-solid fa-x fa-fw"></i></span>
+								<li><u>Objective #4:</u> Modify the GAN model in Goal #3 to work with multiple instruments and genres of music.</li>
+							</div>
+							<div style="display: flex; align-items: center;">
+								<span style="margin-right: 8px;"><i style="color: red;" class="fa-solid fa-x fa-fw"></i></span>
+								<li><u>Objective #6:</u> Create a Transformer model that can generate music by learning the patterns in the music data.</li>
+							</div>
+							<div style="display: flex; align-items: center;">
+								<span style="margin-right: 8px;"><i style="color: green;"class="fa-solid fa-check fa-fw"></i></span>
+								<li><u>Objective #1:</u> Research, identify, and understand how ML models work and how to apply or program them within Python.</li>
+							</div>
+							<div style="display: flex; align-items: center;">
+								<span style="margin-right: 8px;"><i style="color: green;"class="fa-solid fa-check fa-fw"></i></span>
+								<li><u>Objective #2:</u> Create a Recurrent Neural Network (RNN) that can “accurately” predict the next note in a sequence.</li>
+							</div>
+							<div style="display: flex; align-items: center;">
+								<span style="margin-right: 8px;"><i style="color: green;" class="fa-solid fa-check fa-fw"></i></span>
+								<li><u>Objective #5:</u> Input the data differently using notes and chords rather than an a list of [pitch, step, duration].</li>
+							</div>
+						</ul>
+					</section>
+				</section>
+
+				<!-- Progress & Ethical Considerations -->
+
+				<!-- Future Plans -->
 			</div>
 		</div>
-
+	
 		<script src="dist/reveal.js"></script>
 		<script src="plugin/notes/notes.js"></script>
 		<script src="plugin/markdown/markdown.js"></script>
 		<script src="plugin/highlight/highlight.js"></script>
 		<script>
-			// More info about initialization & config:
-			// - https://revealjs.com/initialization/
-			// - https://revealjs.com/config/
 			Reveal.initialize({
 				hash: true,
-
-				// Learn about plugins: https://revealjs.com/plugins/
 				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
 			});
 		</script>
