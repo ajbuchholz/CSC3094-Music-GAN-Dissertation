@@ -1,6 +1,0 @@
-pretty_midi
-matplotlib
-tensorflow[and-cuda]
-pandas
-seaborn
-pyarrow
