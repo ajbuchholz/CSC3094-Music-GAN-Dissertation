@@ -13,16 +13,6 @@
 		<!-- Theme used for syntax highlighted code -->
 		<link rel="stylesheet" href="plugin/highlight/monokai.css">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-		<style>
-			li {
-				transition: transform 0.5s ease;
-			}
-
-			.moving {
-				/* Applied temporarily to elements that are moving */
-				transition: transform 0.5s ease;
-			}
-		</style>
 	</head>
 	<body>
 		<div class="reveal">
@@ -41,11 +31,18 @@
 					</section>
 					<section>
 						<h2>Problem</h2>
-						<ul style="font-size: 22px">
-							<li><p style="font-weight: bold; margin:0;display:inline;float:left; padding-right: 6px;">Music production</p> is a complex and time-consuming process.</li>
-							<li><p style="font-weight: bold; margin:0;display:inline;float:left; padding-right: 6px;">Music production</p> is not begineer friendly and requires a lot of knowledge and expertise.</li>
-							<li><p style="font-weight: bold; margin:0;display:inline;float:left; padding-right: 6px;">Music production</p> is expensive.</li>
-						</ul>
+						<div class="container fragment zoom-in">
+							<div class="image">
+								<img src="https://cdn-icons-png.flaticon.com/512/14781/14781952.png " alt="Problem" style="width: 30%; float: left; filter: invert(100%);">
+							</div>
+							<div class="text">
+								<ol style="font-size: 22px; width: 600px; margin-top: 100px;">
+									<li><p style="font-weight: bold; margin:0;display:inline;float:left; padding-right: 6px;">Music production</p> is a complex and time-consuming process.</li>
+									<li><p style="font-weight: bold; margin:0;display:inline;float:left; padding-right: 6px;">Music production</p> is not begineer friendly and requires a lot of knowledge and expertise.</li>
+									<li><p style="font-weight: bold; margin:0;display:inline;float:left; padding-right: 6px;">Music production</p> is expensive.</li>
+								</ol>
+							</div>
+						</div>
 					</section>
 					<section>
 						<h2>Solution</h2>
@@ -138,12 +135,182 @@
 					</section>
 				</section>
 
+				<!-- Key Technolgies -->
+				<section>
+					<section>
+						<h3>Key Technologies/Libraries</h3>
+						<div class="r-stack">
+							<img class="fragment fade-in-then-out" src="https://cdn.freebiesupply.com/logos/large/2x/python-5-logo-png-transparent.png" alt="Python" style="width: 30%">
+							<img class="fragment fade-in-then-out" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/TensorFlow_logo.svg/1200px-TensorFlow_logo.svg.png" alt="Tensorflow" style="width: 50%">
+							<img class="fragment fade-in-then-out" src="https://keras.io/img/logo.png" alt="Keras" style="width: 50%">
+							<img class="fragment fade-in-then-out" src="https://static.thenounproject.com/png/374559-200.png" style="filter: invert(100%);" alt="Pretty MIDI" style="width: 30%">
+						</div>
+					</section>
+					<section>
+						<h3>Why these Technolgies?</h3>
+						<div style="display:flex;">
+							<blockquote class="fragment fade-in" style="width:auto; margin: 12px; padding: 24px; font-size: 26px;">
+								I selected these technologies because of their versatility, scalability, performance, and large community following. All technologies have proved to be reliable and efficient in accomplishing my objectives. 
+								The only issue that has arisen so far was in converting MIDI files to chords as the library was only able to handle notes. I resolved this by writing a custom function to convert the notes that had a step of 0 to chords (more on this later). 
+							</blockquote>
+						</div>
+					</section>
+				</section>
+				
+				<!-- Literature Review/Sources -->
+				<section>
+					<h3>Literature Review</h3>
+					<div class="r-stack">
+						<blockquote class="fragment zoom-in" style="width:auto; margin: 12px; padding: 24px; font-size: 26px;">
+							There are many papers that have been written on the subject of music generation using machine learning. The most notable papers to my project are: 
+							<ul class="fragment fade-in" ="font-size: 20px;">
+								<li><a href="https://www.tensorflow.org/tutorials/audio/music_generation#setup">Generate Music with a RNN [1]</a></li>
+								<li><a href="https://doi.org/10.3390/pr10122515">Music Generation System for Adversarial Training Based on Deep Learning [2]</a></li>
+								<li><a href="https://arxiv.org/abs/2212.11134">Generating music with sentiment using Transformer-GANs [3]</a></li>
+							</ul>
+						</blockquote>
+					</div>
+				</section>
+
+				<!-- How was Work Managed? -->
+				<section>
+					<h3>How was Work Managed?</h3>
+					<div class="container fragment zoom-in">
+						<div class="image">
+							<img src="https://builtin.com/sites/www.builtin.com/files/styles/ckeditor_optimize/public/inline-images/2_waterfall%20methodology.png" alt="Waterfall Model" style="width: 40%; height: 40%; float: left; filter: invert(100%);">
+						</div>
+						<div class="text">
+							  <p style="font-size: 26px; text-align: left; padding-left: 425px; padding-top:65px;">
+								The work primarily follows a <strong>Waterfall Model</strong>, in which I begin by gathering the requirements for my model; then design and code the model; and finally test and "deploy" the model
+							</p>
+						</div>
+					</div>
+				</section>
+
 				<!-- Progress & Ethical Considerations -->
+				<section>
+					<section>
+						<h2>Overview of Progress</h2>
+					</section>
+
+					<section>
+						<h3>RNN-Pitch Model</h3>
+						<p style="font-size: 18px">The RNN-Pitch Model works by estimating three values, pitch, duration, and step.</p>
+						<pre style="font-size: 16px;">
+							<code data-trim data-line-numbers="1-5|7-11">
+							def define_rnn_model(sequence_length=25, loss_pitch=0.1, loss_step=1.0, loss_duration=1.0):
+								input_shape = (sequence_length, 3)
+								inputs = tf.keras.Input(shape=input_shape)
+								# First LSTM layer
+								x = tf.keras.layers.LSTM(256)(inputs)
+
+								outputs = {
+									'pitch': tf.keras.layers.Dense(128, name='pitch')(x),
+									'step': tf.keras.layers.Dense(1, name='step')(x),
+									'duration': tf.keras.layers.Dense(1, name='duration')(x),
+								}
+
+								model = tf.keras.Model(inputs, outputs)
+
+								loss = {
+									"pitch": tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+									"step": custom_mse_positive,
+									"duration": custom_mse_positive, 
+								}
+
+								optimizer = tf.keras.optimizers.Adam(learning_rate=0.005)
+								model.compile(
+									loss=loss,
+									loss_weights={'pitch': loss_pitch, 'step': loss_step, 'duration': loss_duration},
+									optimizer=optimizer,
+								)
+								model.summary()
+
+								return model
+							</code>
+						</pre>
+					</section>
+					<section>
+						<h3>RNN-Pitch Model Example</h3>
+						<audio controls src="static/sample1.mp3" type="audio/mpeg"></audio>
+
+					</section>
+
+					<section>
+						<h3>RNN-Chord Model</h3>
+						<p style="font-size: 18px">The RNN-Chord Model fixed the flaws in the RNN-Pitch model by converting song data into chords and notes.</p>
+						<pre style="font-size: 16px;">
+							<code data-trim data-line-numbers="6|7|10-21|1-4">
+								def notes_to_chord_name(notes):
+									sorted_notes = sorted(notes, key=lambda note: note.pitch)
+									# Convert note numbers to note names and join with '-'
+									return '-'.join([pretty_midi.note_number_to_name(note.pitch) for note in sorted_notes])
+							
+								def find_chords_and_notes(instrument):
+									chords_and_notes = []
+									sorted_notes = sorted(instrument.notes, key=lambda note: (note.start, note.pitch))
+									
+									current_start_time = None
+									current_group = []
+									for note in sorted_notes:
+										if note.start != current_start_time:
+											if current_group:
+												if len(current_group) == 1:
+													chords_and_notes.append(pretty_midi.note_number_to_name(current_group[0].pitch))
+												else:
+													chords_and_notes.append(notes_to_chord_name(current_group))
+												current_group = []
+											current_start_time = note.start
+										current_group.append(note)
+									
+									if current_group:
+										if len(current_group) == 1:
+											chords_and_notes.append(pretty_midi.note_number_to_name(current_group[0].pitch))
+										else:
+											chords_and_notes.append(notes_to_chord_name(current_group))
+									
+									return chords_and_notes
+							</code>
+						</pre>
+					</section>
+
+					<section>
+						<h3>RNN-Chord Model Example</h3>
+						<audio controls src="static/sample1.mp3" type="audio/mpeg"></audio>
+
+					</section>
+
+					<section>
+						<h3>GAN Model</h3>
+					</section>
+					<section>
+						<h3>GAN Model Example</h3>
+					</section>
+
+					<section>
+						<h3>Source Code</h3>
+						<a href="https://github.com/ajbuchholz/CSC3094-Music-GAN-Dissertation"><img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" style="filter: invert(100); width: 30%;"></a>
+					</section>
+				</section>
 
 				<!-- Future Plans -->
+				<section>
+					<h3>Future Plans</h3>
+					<div class="r-stack">
+						<blockquote class="fragment zoom-in" style="width:auto; margin: 12px; padding: 24px; font-size: 26px;">
+							<ul class="fragment fade-in" ="font-size: 20px;">
+								<li>Modify the GAN model to test it with multiple instruments and different genres of music.</li>
+								<li>Complete the Transformer model.</li>
+								<li>Continue working on the disseration writeup.</li>
+								<li>Finalise poster and submit before the end of spring break.</li>
+							</ul>
+						</blockquote>
+					</div>
+
+
 			</div>
 		</div>
-	
+
 		<script src="dist/reveal.js"></script>
 		<script src="plugin/notes/notes.js"></script>
 		<script src="plugin/markdown/markdown.js"></script>
