@@ -1,57 +1,22 @@
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1' 
+import glob
+import shutil
+import sys
 import pandas as pd
-import tensorflow as tf
 import numpy as np
+from keras import layers, models, losses, optimizers
+import tensorflow as tf
+import matplotlib.pyplot as plt
+from utils import generate_note_sequences_pitch, normalise_song_pitch, array_to_midi_pretty, visualise_song, plot_distributions
 
-def normalise_pitch(notes, vocab_size):
-    """
-    Normalizes the pitch of the notes by the vocabulary size.
-
-    Parameters:
-        notes (tf.SymbolicTensor): An array of notes, where each note is represented as a vector of [pitch, step, duration].
-        vocab_size (int): The size of the pitch vocabulary.
-
-    Returns:
-        np.ndarray: The normalized notes array.
-    """
-    return notes / [vocab_size, 1.0, 1.0]
-
-def split_input_label(sequence, vocabulary_size):
-    """
-    Splits a sequence of notes into input features and labels for model training.
-
-    Parameters:
-        sequence (np.ndarray): A sequence of notes to be split.
-        vocabulary_size (int): The size of the pitch vocabulary for normalization.
-
-    Returns:
-        tuple: A tuple containing the input sequence (with normalized pitch) and a dictionary of labels
-               for 'pitch', 'step', and 'duration'.
-    """
-    input_sequence = sequence[:-1]
-    label_sequence = sequence[-1]
-    input_sequence = normalise_pitch(input_sequence, vocabulary_size)
-    labels = {'pitch': label_sequence[0], 'step': label_sequence[1], 'duration': label_sequence[2]}
-    return input_sequence, labels
-
-def generate_note_sequences(all_normalized_notes, sequence_length, vocabulary_size=128):
-    """
-    Generates training sequences from normalized notes data.
-
-    Parameters:
-        all_normalized_notes (dict): A dictionary with keys 'pitch', 'step', 'duration', each mapping to a list of normalized note values.
-        sequence_length (int): The length of the sequences to generate.
-        vocabulary_size (int, optional): The size of the pitch vocabulary for normalization. Defaults to 128.
-
-    Returns:
-        tf.data.Dataset: A TensorFlow dataset containing tuples of input sequences and labels.
-    """
-
-    selected_attributes = ['pitch', 'step', 'duration']
-    training_data = np.stack([all_normalized_notes[attribute] for attribute in selected_attributes], axis=1)
-    dataset = tf.data.Dataset.from_tensor_slices(training_data)
-    sequence_length += 1  # Adjust for target sequence length
-    sequences = dataset.window(size=sequence_length, shift=1, stride=1, drop_remainder=True).flat_map(lambda x: x.batch(sequence_length, drop_remainder=True))
-    return sequences.map(lambda sequence: split_input_label(sequence, vocabulary_size), num_parallel_calls=tf.data.AUTOTUNE)
+NUMBER_OF_EPOCHS = 100
+SEQUENCE_LENGTH = 100
+TRAIN_MODEL = False
+NUMBER_FILES_TO_PARSE = 10
+NUMBER_OF_PREDICTIONS = 100
+VOCABULARY_SIZE = 128
+BATCH_SIZE = 64
 
 def custom_mse_positive(y_true, y_pred):
     """
@@ -65,10 +30,10 @@ def custom_mse_positive(y_true, y_pred):
         tf.Tensor: The computed loss value.
     """
     mse = tf.reduce_mean((y_true - y_pred) ** 2)
-    positive_pressure = 10 * tf.reduce_mean(tf.maximum(-y_pred, 0.0))
+    positive_pressure = 15 * tf.reduce_mean(tf.maximum(-y_pred, 0.0))
     return mse + positive_pressure
 
-def define_rnn_model(sequence_length=25, loss_weight_pitch=0.1, loss_weight_step=1.0, loss_weight_duration=1.0):
+def define_rnn_model(sequence_length=25, loss_weight_pitch=0.1, loss_weight_step=2.0, loss_weight_duration=2.0):
     """
     Defines and compiles a recurrent neural network (RNN) model for music generation.
 
@@ -86,31 +51,45 @@ def define_rnn_model(sequence_length=25, loss_weight_pitch=0.1, loss_weight_step
     """
 
     input_shape = (sequence_length, 3)
-    inputs = tf.keras.Input(shape=input_shape)
-    # First LSTM layer
-    x = tf.keras.layers.LSTM(256)(inputs)
+    inputs = layers.Input(shape=input_shape)
 
-    outputs = {
-        'pitch': tf.keras.layers.Dense(128, name='pitch')(x),
-        'step': tf.keras.layers.Dense(1, name='step')(x),
-        'duration': tf.keras.layers.Dense(1, name='duration')(x),
-    }
+    # LSTM layer
+    x = layers.LSTM(256)(inputs)
+    x = layers.Dense(128)(x)
+    x = layers.BatchNormalization()(x)
+    x = layers.Dropout(0.15)(x)
+    x = layers.Dense(64)(x)
+    x = layers.BatchNormalization()(x)
+    x = layers.Dropout(0.15)(x)
+    x = layers.Dense(64)(x)
+    x = layers.BatchNormalization()(x)
+    x = layers.Dropout(0.15)(x)
+    x = layers.Dense(32)(x)
+    x = layers.BatchNormalization()(x)
+    x = layers.Dropout(0.15)(x)
+    x = layers.Dense(16)(x)
+    x = layers.BatchNormalization()(x)
 
-    model = tf.keras.Model(inputs, outputs)
+    # Output layers
+    pitch_output = layers.Dense(128, name='pitch')(x)
+    step_output = layers.Dense(1, name='step')(x)
+    duration_output = layers.Dense(1, name='duration')(x)
+
+    # Model definition
+    model = models.Model(inputs=inputs, outputs={"pitch": pitch_output, "step": step_output, "duration": duration_output})
 
     loss = {
-        "pitch": tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+        "pitch": losses.SparseCategoricalCrossentropy(from_logits=True),
         "step": custom_mse_positive,
         "duration": custom_mse_positive, 
     }
 
-    optimizer = tf.keras.optimizers.Adam(learning_rate=0.005)
+    optimizer = optimizers.Adam(learning_rate=0.005)
     model.compile(
         loss=loss,
         loss_weights={'pitch': loss_weight_pitch, 'step': loss_weight_step, 'duration': loss_weight_duration},
         optimizer=optimizer,
     )
-    model.summary()
 
     return model
 
@@ -130,7 +109,7 @@ def train_rnn_model(model, training_song_dataset, number_of_epoch):
         tf.keras.callbacks.History: A History object.
     """
     callback = tf.keras.callbacks.ModelCheckpoint(
-        filepath='model_weights/checkpoint_{epoch}.hdf5',
+        filepath='rnnpitch_checkpoints/checkpoint_{epoch}.weights.h5',
         save_weights_only=True,
         monitor='loss', 
         mode='min',
@@ -177,3 +156,59 @@ def predict_next_note(notes, model, temperature=1.0, subtract_step=0.0, subtract
     duration = tf.maximum(0, duration)
 
     return int(pitch), float(step), float(duration)
+
+if __name__ == '__main__':
+    seed = 42
+    tf.random.set_seed(seed)
+    np.random.seed(seed)
+
+    # Load our MIDI files from the directory
+    midi_files = glob.glob("../data/classical-piano/*.mid")
+
+    # Normalise our dataset
+    normalised_notes = []
+    for file in midi_files[:NUMBER_FILES_TO_PARSE]:
+        notes = normalise_song_pitch(file)
+        normalised_notes.append(notes)
+    all_normalised_notes = pd.concat(normalised_notes)
+
+    # Set the sequence length for each example
+    key_order = ['pitch', 'step', 'duration']
+    sequence_song_dataset = generate_note_sequences_pitch(all_normalised_notes, SEQUENCE_LENGTH, VOCABULARY_SIZE)
+
+    # Define RNN Model
+    buffer_size = len(all_normalised_notes) - SEQUENCE_LENGTH  # the number of items in the dataset
+    training_song_dataset = sequence_song_dataset.shuffle(buffer_size).batch(BATCH_SIZE, drop_remainder=True).cache().prefetch(tf.data.experimental.AUTOTUNE)
+    model = define_rnn_model(sequence_length=SEQUENCE_LENGTH)
+    
+    if TRAIN_MODEL:
+        # Train Model
+        shutil.rmtree('rnnpitch_checkpoints')
+        history = train_rnn_model(model, training_song_dataset, number_of_epoch=NUMBER_OF_EPOCHS)
+        plt.plot(history.epoch, history.history['loss'], label='total loss')
+        plt.show()
+    else:
+        # Load Model
+        try:
+            model.load_weights(f'final_weights/weights_pitch.weights.h5')
+        except:
+            sys.exit("Weight File Not Found")
+
+    # Generate Song
+    input_notes = np.stack([all_normalised_notes[key] for key in key_order], axis=1)[:SEQUENCE_LENGTH] / np.array([VOCABULARY_SIZE, 1, 1])
+    generated_notes = []
+    start = 0
+    for _ in range(NUMBER_OF_PREDICTIONS):
+        pitch, step, duration = predict_next_note(input_notes, model, temperature=6.5, subtract_step=2.1, subtract_duration=2.9)
+        start += step
+        end = start + duration
+        generated_note = (pitch, step, duration, start, end)
+        generated_notes.append(generated_note)
+        input_notes = np.vstack([input_notes[1:], np.array(generated_note[:3])])
+
+    generated_notes = pd.DataFrame(generated_notes, columns=[*key_order, 'start', 'end'])
+
+    # Save Generate Song
+    visualise_song(generated_notes)
+    plot_distributions(generated_notes)
+    array_to_midi_pretty(generated_notes, "output-rnn-pitch.mid")
