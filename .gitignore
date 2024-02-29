@@ -27,7 +27,10 @@ share/python-wheels/
 MANIFEST
 
 # Training Checkpoints
-model_weights/
+gan_checkpoints/
+rnnchord_checkpoints/
+rnnpitch_checkpoints/
 
 # Output MIDI file
+transformer_output.mid
 output.mid
