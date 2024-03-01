@@ -4,50 +4,26 @@ import collections
 import seaborn as sns
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
-from tensorflow.keras import utils
 import tensorflow as tf
+import matplotlib.pyplot as plt
+from music21 import note, chord, converter, stream, instrument
+from tensorflow.keras import utils
 
 ##################################
 ##### CHORD HELPER FUNCTIONS #####
 ##################################
-def notes_to_chord_name(notes):
-    sorted_notes = sorted(notes, key=lambda note: note.pitch)
-    # Convert note numbers to note names and join with '-'
-    return '-'.join([pretty_midi.note_number_to_name(note.pitch) for note in sorted_notes])
-
-def find_chords_and_notes(instrument):
-    chords_and_notes = []
-    sorted_notes = sorted(instrument.notes, key=lambda note: (note.start, note.pitch))
-    
-    current_start_time = None
-    current_group = []
-    for note in sorted_notes:
-        if note.start != current_start_time:
-            if current_group:
-                if len(current_group) == 1:
-                    chords_and_notes.append(pretty_midi.note_number_to_name(current_group[0].pitch))
-                else:
-                    chords_and_notes.append(notes_to_chord_name(current_group))
-                current_group = []
-            current_start_time = note.start
-        current_group.append(note)
-    
-    if current_group:
-        if len(current_group) == 1:
-            chords_and_notes.append(pretty_midi.note_number_to_name(current_group[0].pitch))
-        else:
-            chords_and_notes.append(notes_to_chord_name(current_group))
-    
-    return chords_and_notes
-
-def normalise_song(midi_file_path):
+def normalise_song(midi_file):
     notes = []
-    midi_data = pretty_midi.PrettyMIDI(midi_file_path)
     
-    # Process each instrument to find notes and chords
-    for instrument in midi_data.instruments:
-        notes.extend(find_chords_and_notes(instrument))
+    midi = converter.parse(midi_file)
+    print(f"Parsing {midi_file}")
+    notes_to_parse = midi.flatten().notes
+
+    for element in notes_to_parse:
+        if isinstance(element, note.Note):
+            notes.append(str(element.pitch))
+        elif isinstance(element, chord.Chord):
+            notes.append('.'.join(str(n) for n in element.normalOrder))
     
     return notes
 
@@ -62,35 +38,30 @@ def generate_note_sequences(notes, sequence_length, vocabulary_size):
     
     return network_input, network_output, assign_int_to_note
 
+def create_midi_chords(prediction_output, filename="output"):
+    midi_stream = stream.Stream()
+    piano_part = stream.Part()
+    piano_part.insert(0, instrument.Piano())
+    offset = 0
+    song_notes = []
 
-def create_midi_chords(prediction_output, file_path="ouput.mid"):
-    pm = pretty_midi.PrettyMIDI()
-    piano_program = pretty_midi.instrument_name_to_program('Acoustic Grand Piano')
-    piano = pretty_midi.Instrument(program=piano_program)
-    offset = 0 
+    for item in prediction_output:
+        if '.' in item or item.isdigit():
+            notes_in_chord = item.split('.')
+            notes = [note.Note(int(current_note), offset=offset, storedInstrument=instrument.Piano()) for current_note in notes_in_chord]
+            new_chord = chord.Chord(notes)
+            new_chord.offset = offset
+            song_notes.append(new_chord)
+        else:
+            new_note = note.Note(item, offset=offset, storedInstrument=instrument.Piano())
+            song_notes.append(new_note)
 
-    for pattern in prediction_output:
-        # Split pattern into notes if it's a chord, otherwise treat as a single note
-        elements = pattern.split('-') if '-' in pattern else [pattern]
-        
-        for el in elements:
-            note_number = int(el) if el.isdigit() else pretty_midi.note_name_to_number(el)
-            
-            note = pretty_midi.Note(
-                velocity=100, 
-                pitch=note_number,
-                start=offset,
-                end=offset + 0.3  # Note duration
-            )
-            piano.notes.append(note)
-        
-        offset += 0.3
+        offset += 0.5
 
-    pm.instruments.append(piano)
-    pm.write(file_path)
+    midi_stream = stream.Stream(song_notes)
+    midi_stream.write('midi', fp='{}.mid'.format(filename))
 
-    return pm
-
+    return midi_stream
 
 ##############################
 ### PITCH HELPER FUNCTIONS ###
