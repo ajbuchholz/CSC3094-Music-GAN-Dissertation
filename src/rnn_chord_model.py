@@ -1,3 +1,5 @@
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import sys
 import glob
 from keras import layers, models, callbacks
@@ -44,7 +46,7 @@ def define_rnn_model(network_in, vocabulary_size):
 
 def train_rnn_model(model, network_in, network_out, number_of_epoch):
     callback = callbacks.ModelCheckpoint(
-        filepath='rnnchord_checkpoints/checkpoint_{epoch}.hdf5',
+        filepath='rnnchord_checkpoints/checkpoint_{epoch}.weights.h5',
         save_weights_only=True,
         monitor='loss', 
         mode='min',
@@ -104,16 +106,16 @@ if __name__ == '__main__':
         history = train_rnn_model(model, network_in, network_out, number_of_epoch=NUMBER_OF_EPOCHS)
         plt.plot(history.epoch, history.history['loss'], label='total loss')
         plt.show()
-    else:
+    else:        
         try:
-            model.load_weights('final_weights/weights_chord.hdf5')
+            model.load_weights('final_weights/weights_chord.weights.h5')
         except:
             sys.exit("Weight File Not Found")
 
     pitchnames = sorted(set(item for item in all_notes))
     prediction_output = predict_next_note(model, all_notes, pitchnames, vocabulary_size)
-    create_midi_chords(prediction_output, "output-rnn-chord.mid")
+    create_midi_chords(prediction_output, "output-rnn-chord")
     
-    output_normalised_midi = normalise_song_pitch("./output-rnn-chord.mid")
+    output_normalised_midi = normalise_song_pitch("output-rnn-chord.mid")
     visualise_song(output_normalised_midi)
     plot_distributions(output_normalised_midi)
