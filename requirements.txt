@@ -4,3 +4,4 @@ tensorflow[and-cuda]
 pandas
 seaborn
 pyarrow
+music21
