@@ -38,7 +38,7 @@
 							<div class="text">
 								<ol style="font-size: 22px; width: 600px; margin-top: 100px;">
 									<li><p style="font-weight: bold; margin:0;display:inline;float:left; padding-right: 6px;">Music production</p> is a complex and time-consuming process.</li>
-									<li><p style="font-weight: bold; margin:0;display:inline;float:left; padding-right: 6px;">Music production</p> is not beginner-friendly and requires a lot of knowledge and expertise.</li>
+									<li><p style="font-weight: bold; margin:0;display:inline;float:left; padding-right: 6px;">Music production</p> is inaccessible to beginners and requires a lot of knowledge and expertise.</li>
 									<li><p style="font-weight: bold; margin:0;display:inline;float:left; padding-right: 6px;">Music production</p> is expensive.</li>
 								</ol>
 							</div>
@@ -46,11 +46,11 @@
 					</section>
 					<section>
 						<h2>Solution</h2>
-						<p class="fragment fade-in" style="font-size: 30px">Similar to other industries, the musical sector can leverage emerging technological innovation and the latest advancements in AI to address:</p>
+						<p class="fragment fade-in" style="font-size: 30px">Similar to other industries, the musical sector can leverage technological innovation and the latest advancements in AI to address:</p>
 						<ul class=fragment fade-in" style="font-size: 22px">
 							<li>Automated Composition - AI can analyse vast amounts of music to produce similar pieces.</li>
 							<li>Accessible Music Creation Tools - AI can help those new to the industry.</li>
-							<li>Lowers Production Costs - AI can lower the need for expensive equipment</li>
+							<li>Lowers Production Costs - AI can lower the need for expensive equipment.</li>
 						</ul>
 					</section>
 					<section>
@@ -60,7 +60,7 @@
 								The project will focus on the development of a music generation system that leverages advanced machine learning techniques to automate the music production process. 
 							</blockquote>
 						</div>
-						<h6 class="fragment fade-in" style="font-size: 32px;">RNN Models • GAN Models • Tranformer Models</h6>
+						<h6 class="fragment fade-in" style="font-size: 32px;">RNN Models • GAN Models • Transformer Models</h6>
 					</section>
 				</section>
 
@@ -72,7 +72,7 @@
 					<section data-auto-animate>
 						<h2>Aims & Objectives</h2>
 						<ul style="font-size: 18px; list-style: none;">
-							<li><u>Objective #1:</u> Create a Recurrent Neural Network (RNN) that can “accurately” predict the next note in a sequence.</li>
+							<li><u>Objective #1:</u> Create a RNN that can “accurately” predict the next note in a sequence.</li>
 							<li><u>Objective #2:</u> Experiment with different normalisation methods for the RNN model (Chords and Notes).</li>
 							<li><u>Objective #3:</u> Create a GAN using a generator and discriminator that “compete” against one another to create music.</li>
 							<li><u>Objective #4:</u> Modify the GAN model in "Objective #3" to work with multiple instruments and genres of music.</li>
@@ -83,7 +83,7 @@
 						<h2>Aims & Objectives</h2>
 						<ul style="font-size: 18px; list-style: none; display: inline-block;" id="objectivesList">
 							<div style="display: flex; align-items: center;">
-								<span style="margin-right: 8px;"><i style="color: red;" class="fa-solid fa-x fa-fw"></i></span>
+								<span style="margin-right: 8px;"><i style="color: rgba(160, 160, 160, 0.872);" class="fa-solid fa-wrench fa-fw"></i></span>
 								<li><u>Objective #4:</u> Modify the GAN model in "Objective #3" to work with multiple instruments and genres of music.</li>
 							</div>
 							<div style="display: flex; align-items: center;">
@@ -100,7 +100,7 @@
 							</div>
 							<div style="display: flex; align-items: center;">
 								<span style="margin-right: 8px;"><i style="color: green;" class="fa-solid fa-check fa-fw"></i></span>
-								<li><u>Objective #1:</u> Create a Recurrent Neural Network (RNN) that can “accurately” predict the next note in a sequence.</li>
+								<li><u>Objective #1:</u> Create a RNN that can “accurately” predict the next note in a sequence.</li>
 							</div>
 						</ul>
 					</section>
@@ -119,12 +119,18 @@
 					</section>
 					<section>
 						<h3>Why these Technolgies?</h3>
-						<div style="display:flex;">
-							<blockquote class="fragment fade-in" style="width:auto; margin: 12px; padding: 24px; font-size: 26px; text-align: left;">
-								I selected these technologies because of their versatility, scalability, performance, and large community following. <br><br>
-								- Keras was utilised in CSC3831.<br>
-								- MIDI is a standard format for music files and has several Python libraries for normalising data.<br>
-							</blockquote>
+						<div class="fragment zoom-in">
+							<div style="width: 100%;">
+								<blockquote style="width:auto; margin: 12px; padding: 24px; font-size: 26px; text-align: left;">
+									I selected these technologies because of their versatility, scalability, performance, and large community following. <br><br>
+									- Keras was utilised in CSC3831.<br>
+									- MIDI is a standard format for music files and has several Python libraries for normalising data.<br>
+								</blockquote>
+							</div>
+							<img src="https://cdn.freebiesupply.com/logos/large/2x/python-5-logo-png-transparent.png" alt="Python" style="width: 10%">
+							<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/TensorFlow_logo.svg/1200px-TensorFlow_logo.svg.png" alt="Tensorflow" style="margin-top: 48px; width: 20%">
+							<img src="https://keras.io/img/logo.png" alt="Keras" style="width: 20%; margin-bottom: 48px;">
+							<img src="https://static.thenounproject.com/png/374559-200.png" style="width: 10%; filter: invert(100%);" alt="Pretty MIDI">
 						</div>
 					</section>
 				</section>
@@ -153,7 +159,10 @@
 						</div>
 						<div class="text">
 							  <p style="font-size: 26px; text-align: left; padding-left: 425px; padding-top:65px;">
-								The project follows the <strong>Waterfall Model</strong>, beginning with research and collecting requirements, then moving on to designing and coding the model, and finalising the model by testing and modifying hyper-parameters.
+								The project follows the <strong>Waterfall Model</strong>: <br>
+								1. Research and collecting requirements<br>
+								2. Model design and coding<br>
+								3. Model finalization via testing and tweaking
 							</p>
 						</div>
 					</div>
@@ -168,7 +177,7 @@
 					<!-- RNN PITCH -->
 					<section>
 						<h3>RNN-Pitch Model</h3>
-						<p style="font-size: 22px">The RNN-Pitch Model works by estimating three values, pitch, duration, and step.</p>
+						<p style="font-size: 22px">The RNN-Pitch Model works by estimating three values: pitch, duration, and step.</p>
 						<img style="filter: invert(100);" class="fragment zoom-in" src="static/rnn-pitch.png">
 					</section>
 					<section>
@@ -205,7 +214,7 @@
 					</section>
 					<section data-auto-animate>
 						<h4>RNN-Chord Model (Notes and Chords)</h4>
-						<p style="font-size: 22px">Chords utilise <a href="https://web.mit.edu/music21/doc/moduleReference/moduleChord.html">"Pitch Class"</a> (0-12) to represent notes. This ensures that the model only has to consider 0-11 and not all 88 possibles notes and their permutations.</p>
+						<p style="font-size: 22px">Chords utilise <a href="https://web.mit.edu/music21/doc/moduleReference/moduleChord.html">"Pitch Class"</a> (0-11) to represent notes. This ensures that the model only has to consider 0-11 and not all 88 possibles notes and their permutations.</p>
 						<pre>
 							<code data-trim data-noescape>
 								[..., '0.4', '10.0', '0.5', '0.4.7', ...]
@@ -227,7 +236,7 @@
 						<img style="filter: invert(100);" class="fragment zoom-in" src="static/gan.png">
 					</section>
 					<section>
-						<h3>GAN Model (Notes/Chords & Frequency)</h3>
+						<h5>GAN Model (Notes/Chords & Frequency)</h5>
 						<p style="font-size: 22px">Notes and Chords utilised the same principles as in the RNN-Chord Model. <br> Frequency converted notes into their associated frequency.</p>
 						<div class="fragment fade-in">
 							<img style="margin: 0;" src="https://sengpielaudio.com/KeyboardAndFrequencies.gif">
@@ -242,8 +251,8 @@
 							<p style="font-size:14px; margin: 0; "><em>Retrieved From: <a href="https://www.audiolabs-erlangen.de/">Audiolabs-Erlangen [4]</a></em></p>
 						</div>
 						<pre class="fragment zoom-in">
-							<code data-trim data-noescape>
-								[[1, 67, 60], [1, 55, 0], [1, 43, 0], [0, 67, 55], ...]
+							<code data-trim data-noescape style="font-size: 18px;">
+								[[note on/off, pitch, ticks], [1, 67, 60], [1, 55, 0], [1, 43, 0], [0, 67, 55], ...]
 							</code>
 						</pre>
 					</section>
@@ -302,7 +311,7 @@
 						<blockquote class="fragment zoom-in" style="width:auto; margin: 12px; padding: 24px; font-size: 26px;">
 							<ul class="fragment fade-in" ="font-size: 20px;">
 								<li>Modify the GAN model to work with multiple instruments.</li>
-								<li>Continue working on the disseration writeup (Currently at ~9,000 words).</li>
+								<li>Continue working on the dissertation writeup (Currently at ~9,000 words).</li>
 								<li>Finalise poster and submit before the end of spring break.</li>
 							</ul>
 						</blockquote>
@@ -320,9 +329,8 @@
 						[4] A. Labs, FMP_C1_F13, MIDI Note Event Representation. Available: https://www.audiolabs-erlangen.de/resources/MIR/FMP/data/C1/FMP_C1_F13.png<br>
 					   	[5] B. Rechner, Tontechnik-Rechner, MIDI Note Names. Available: https://sengpielaudio.com/calculator-notenames<br>
 					   	[6] D. Kulma, David Kulma, Pitch Class. Available: https://davidkulma.com/musictheory/integers<br>
-					   	[7] M. Tits, ReseachGate, MIDI Note Numbers. Available: https://www.researchgate.net/figure/88-notes-classical-keyboard-Note-names-and-MIDI-numbers_fig8_283460243<br>
-					   	[8] Builtin.com, 2024. https://builtin.com/sites/www.builtin.com/files/styles/ckeditor_optimize/public/inline-images/2_waterfall%20methodology.png.
-‌						
+					   	[7] M. Tits, ResearchGate, MIDI Note Numbers. Available: https://www.researchgate.net/figure/88-notes-classical-keyboard-Note-names-and-MIDI-numbers_fig8_283460243<br>
+					   	[8] Builtin.com, 2024. https://builtin.com/sites/www.builtin.com/files/styles/ckeditor_optimize/public/inline-images/2_waterfall%20methodology.png.				
 					</p>
 				</section>
 			</div>
