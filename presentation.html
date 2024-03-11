@@ -60,7 +60,7 @@
 								The project will focus on the development of a music generation system that leverages advanced machine learning techniques to automate the music production process. 
 							</blockquote>
 						</div>
-						<h6 style="font-size: 32px;">RNN Models • GAN Models • Tranformer Models</h6>
+						<h6 class="fragment fade-in" style="font-size: 32px;">RNN Models • GAN Models • Tranformer Models</h6>
 					</section>
 				</section>
 
@@ -173,7 +173,7 @@
 					</section>
 					<section>
 						<h3>RNN-Pitch Model Example</h3>
-						<audio controls src="static/sample1.mp3" type="audio/mpeg"></audio>
+						<audio controls src="static/rnn-pitch.mp3" type="audio/mpeg"></audio>
 					</section>
 
 					<!-- RNN CHORD -->
@@ -201,7 +201,7 @@
 							</code>
 						</pre>
 						<img style="margin: 0;" src="https://www.researchgate.net/publication/283460243/figure/fig8/AS:614346480685058@1523483023512/88-notes-classical-keyboard-Note-names-and-MIDI-numbers.png">
-						<p style="font-size:14px; margin: 0; "><em>Retrieved From: <a href="https://www.researchgate.net/figure/88-notes-classical-keyboard-Note-names-and-MIDI-numbers_fig8_283460243">Mickaël Tits</a></em></p>
+						<p style="font-size:14px; margin: 0; "><em>Retrieved From: <a href="https://www.researchgate.net/figure/88-notes-classical-keyboard-Note-names-and-MIDI-numbers_fig8_283460243">Mickaël Tits [7]</a></em></p>
 					</section>
 					<section data-auto-animate>
 						<h4>RNN-Chord Model (Notes and Chords)</h4>
@@ -212,7 +212,7 @@
 							</code>
 						</pre>
 						<img style="margin: 0; filter: invert(100);" src="static/pitchclass.png" height="300">
-						<p style="font-size:14px; margin: 0; "><em>Retrieved From: <a href="https://davidkulma.com/musictheory/integers">David Kulma</a></em></p>
+						<p style="font-size:14px; margin: 0; "><em>Retrieved From: <a href="https://davidkulma.com/musictheory/integers">David Kulma [6]</a></em></p>
 					</section>
 
 					<section>
@@ -231,7 +231,7 @@
 						<p style="font-size: 22px">Notes and Chords utilised the same principles as in the RNN-Chord Model. <br> Frequency converted notes into their associated frequency.</p>
 						<div class="fragment fade-in">
 							<img style="margin: 0;" src="https://sengpielaudio.com/KeyboardAndFrequencies.gif">
-							<p style="font-size:14px; margin: 0; "><em>Retrieved From: <a href="https://sengpielaudio.com/calculator-notenames.htm">Tontechnik-Rechner</a></em></p>
+							<p style="font-size:14px; margin: 0; "><em>Retrieved From: <a href="https://sengpielaudio.com/calculator-notenames.htm">Tontechnik-Rechner [5]</a></em></p>
 						</div>
 					</section>
 					<section>
@@ -239,7 +239,7 @@
 						<p style="font-size: 22px">MIDI Files Consist of Note Events (NOTE ON and NOTE OFF).</p>
 						<div class="fragment fade-in">
 							<img style="margin: 0;" src="https://www.audiolabs-erlangen.de/resources/MIR/FMP/data/C1/FMP_C1_F13.png" height="400">
-							<p style="font-size:14px; margin: 0; "><em>Retrieved From: <a href="https://sengpielaudio.com/calculator-notenames.htm">Audiolabs-Erlangen</a></em></p>
+							<p style="font-size:14px; margin: 0; "><em>Retrieved From: <a href="https://www.audiolabs-erlangen.de/">Audiolabs-Erlangen [4]</a></em></p>
 						</div>
 						<pre class="fragment zoom-in">
 							<code data-trim data-noescape>
@@ -250,7 +250,7 @@
 
 					<section>
 						<h3>GAN Model Example</h3>
-						<audio controls src="static/sample1.mp3" type="audio/mpeg"></audio>
+						<audio controls src="static/gan.mp3" type="audio/mpeg"></audio>
 					</section>
 
 					<!-- Transformer Model -->
@@ -286,7 +286,7 @@
 
 					<section>
 						<h3>Transformer Model Example</h3>
-						<audio controls src="static/sample1.mp3" type="audio/mpeg"></audio>
+						<audio controls src="static/transformer.mp3" type="audio/mpeg"></audio>
 					</section>
 
 					<section>
@@ -307,6 +307,23 @@
 							</ul>
 						</blockquote>
 					</div>
+				</section>
+
+
+				<!-- References -->
+				<section>
+					<h3>References</h3>
+					<p style="font-size: 16px; text-align: left;">
+						[1] “Generate music with an RNN | TensorFlow Core,” TensorFlow. https://www.tensorflow.org/tutorials/audio/music_generation#setup.<br>
+						[2] “Music Transformer: Generating Music with Long-Term Structure,” research.google. https://research.google/pubs/music-transformer-generating-music-with-long-term-structure/.<br>
+						[3] H.-W. Dong, W.-Y. Hsiao, L.-C. Yang, and Y.-H. Yang, “MuseGAN: Multi-track Sequential Generative Adversarial Networks for Symbolic Music Generation and Accompaniment,” arXiv.org, 2017. https://arxiv.org/abs/1709.06298.<br>
+						[4] A. Labs, FMP_C1_F13, MIDI Note Event Representation. Available: https://www.audiolabs-erlangen.de/resources/MIR/FMP/data/C1/FMP_C1_F13.png<br>
+					   	[5] B. Rechner, Tontechnik-Rechner, MIDI Note Names. Available: https://sengpielaudio.com/calculator-notenames<br>
+					   	[6] D. Kulma, David Kulma, Pitch Class. Available: https://davidkulma.com/musictheory/integers<br>
+					   	[7] M. Tits, ReseachGate, MIDI Note Numbers. Available: https://www.researchgate.net/figure/88-notes-classical-keyboard-Note-names-and-MIDI-numbers_fig8_283460243<br>
+					   	[8] Builtin.com, 2024. https://builtin.com/sites/www.builtin.com/files/styles/ckeditor_optimize/public/inline-images/2_waterfall%20methodology.png.
+‌						
+					</p>
 				</section>
 			</div>
 		</div>
