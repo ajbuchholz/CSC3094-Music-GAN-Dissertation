@@ -35,12 +35,14 @@
 							<div class="image">
 								<img src="https://cdn-icons-png.flaticon.com/512/14781/14781952.png " alt="Problem" style="width: 30%; float: left; filter: invert(100%);">
 							</div>
-							<div class="text">
-								<ol style="font-size: 22px; width: 600px; margin-top: 100px;">
-									<li><p style="font-weight: bold; margin:0;display:inline;float:left; padding-right: 6px;">Music production</p> is a complex and time-consuming process.</li>
-									<li><p style="font-weight: bold; margin:0;display:inline;float:left; padding-right: 6px;">Music production</p> is inaccessible to beginners and requires a lot of knowledge and expertise.</li>
-									<li><p style="font-weight: bold; margin:0;display:inline;float:left; padding-right: 6px;">Music production</p> is expensive.</li>
-								</ol>
+							<div class="text" style="padding-top: 72px;">
+								<p style="font-weight: bold; margin:0; display:inline; float:left; padding-right: 6px; font-size: 32px;">Music production</p>
+								<ul style="font-size: 22px; width: 600px;">
+									<li>is complex and time-consuming.</li>
+									<li>is inaccessible to beginners.</li>
+									<li>is expensive.</li>
+									<li>requires a lot of knowledge and expertise</li>
+								</ul>
 							</div>
 						</div>
 					</section>
@@ -50,14 +52,14 @@
 						<ul class=fragment fade-in" style="font-size: 22px">
 							<li>Automated Composition - AI can analyse vast amounts of music to produce similar pieces.</li>
 							<li>Accessible Music Creation Tools - AI can help those new to the industry.</li>
-							<li>Lowers Production Costs - AI can lower the need for expensive equipment.</li>
+							<li>Lower Production Costs - AI can lower the need for expensive equipment.</li>
 						</ul>
 					</section>
 					<section>
 						<h2>Project Summary</h2>
 						<div style="display:flex;">
 							<blockquote class="fragment fade-in" style="width:auto; margin: 12px; padding: 24px; font-size: 30px;">
-								The project will focus on the development of a music generation system that leverages advanced machine learning techniques to automate the music production process. 
+								The project will focus on the development of a music generation system that leverages advanced machine learning techniques to automate the music production process; with a focus on classical cantatas. 
 							</blockquote>
 						</div>
 						<h6 class="fragment fade-in" style="font-size: 32px;">RNN Models • GAN Models • Transformer Models</h6>
@@ -188,7 +190,7 @@
 					<!-- RNN CHORD -->
 					<section>
 						<h3>RNN-Chord Model</h3>
-						<p style="font-size: 22px">The RNN-Chord Model fixed the flaws in the RNN-Pitch model by converting song data into chords and notes.</p>
+						<p style="font-size: 22px">The RNN-Chord Model fixed the flaws in the RNN-Pitch model (timing intervals) by converting song data into chords and notes.</p>
 						<img style="filter: invert(100);" class="fragment zoom-in" src="static/rnn-chord.png">
 					</section>
 					
@@ -232,7 +234,7 @@
 					<!-- GAN -->
 					<section>
 						<h3>GAN Model</h3>
-						<p style="font-size: 22px">MIDI Data was normalised in three different ways: Notes and Chords, Frequency, and Note Events</p>
+						<p style="font-size: 22px">MIDI Data was normalised in three different ways: Notes and Chords, Frequency, and Note Events. The different normalisation techniques were attempted as training GAN Models can lead to issues such as mode collapse and tend to be finicky.</p>
 						<img style="filter: invert(100);" class="fragment zoom-in" src="static/gan.png">
 					</section>
 					<section>
@@ -265,7 +267,7 @@
 					<!-- Transformer Model -->
 					<section>
 						<h3>Transformer Model</h3>
-						<p style="font-size: 22px">The Transformer Model utilises sequence-to-sequence techniques to predict the next sequence of notes.</p>
+						<p style="font-size: 22px">The Transformer Model utilises sequence-to-sequence (notes and chords) techniques to predict the next sequence of notes.</p>
 						<img style="filter: invert(100);" class="fragment zoom-in" src="static/transformer.png">
 					</section>
 					<section>
