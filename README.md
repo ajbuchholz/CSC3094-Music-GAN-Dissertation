@@ -9,22 +9,24 @@
 ## Dataset Information
 "The ADL Piano MIDI is a dataset of 11,086 piano pieces from different genres. This dataset is based on the Lakh MIDI dataset, which is a collection on 45,129 unique MIDI files that have been matched to entries in the Million Song Dataset."
 
-`adl-piano-midi.zip` | ZIP file of all the MIDI files \
-`adl-piano-midi/` | Directory containing the unzipped contents of the ZIP file \
-`classical-piano/` | Directory containing all the MIDI classical piano files (training set)
+`classical-piano/` | Directory containing all the MIDI classical piano files. [1] [2]
+`maestro/` | Directory containing the Maestro MIDI dataset. [3]
+`mozart-multi/` | Directory containing multi-track MIDI dataset. 
 
 ### Dataset References
 ```
 [1] L. N. Ferreira, L. H. S. Lelis, and J. Whitehead, “Computer-Generated Music for Tabletop Role-Playing Games,” arXiv.org, Aug. 16, 2020. https://arxiv.org/abs/2008.07009.
 [2] Colin Raffel. "Learning-Based Methods for Comparing Sequences, with Applications to Audio-to-MIDI Alignment and Matching". PhD Thesis, 2016.
+[3] C. Hawthorne, et al. "Enabling Factorized Piano Music Modeling and Generation with the MAESTRO Dataset." In International Conference on Learning Representations, 2019.
 ```
 
 ## RNN Models
-1. First experiment with creating an RNN model. The `rnn_pitch_model` Python file utilises the original idea of normalising the data into an array of [pitch, step, duration]. Then train a model to predict the next note in a sequence of 100 notes. However, the downsides were that the model was unable to effectively play chords, so the song was, in essence, one note being pressed at a time.
-2. The second experiment was to normalise the input data differently so the model could understand the difference between notes and chords. The `rnn_chords_model` Python file uses a different format for normalising our data in the form of notes and chords. Similarly, the model is trained to predict the next note or chord in a sequence.
+1. `rnn_pitch_model` | [pitch, step, duration] | Classical Piano Dataset
+2. `rnn_chords_model.py` | Note and Chords | Classical Piano Dataset
 
-## GAN Model
-WIP
+## GAN Models
+1. `gan_model.py` | Notes and Chords, Frequency, and Note Events | Classical Piano Dataset 
+2. `gan_model_multiple.py` | Notes and Chords for Multi-Track (multiple instruments) MIDI files | Mozart MIDI Files
 
 ## Tranformer Model
-WIP
+1. `transformer/transformer_model.py` | Notes and Chords (Seq2Seq) | Maestro & Classical Piano

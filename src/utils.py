@@ -38,30 +38,47 @@ def generate_note_sequences(notes, sequence_length, vocabulary_size):
     
     return network_input, network_output, assign_int_to_note
 
-def create_midi_chords(prediction_output, filename="output"):
-    midi_stream = stream.Stream()
-    piano_part = stream.Part()
-    piano_part.insert(0, instrument.Piano())
+def create_midi_chords(prediction_output, filename="output", instrument_name=None):
+    piano_notes = []
+    violin_notes = []
     offset = 0
-    song_notes = []
 
     for item in prediction_output:
         if '.' in item or item.isdigit():
             notes_in_chord = item.split('.')
-            notes = [note.Note(int(current_note), offset=offset, storedInstrument=instrument.Piano()) for current_note in notes_in_chord]
+            if instrument_name is None or instrument_name == "Acoustic Grand Piano":
+                notes = [note.Note(int(current_note), offset=offset) for current_note in notes_in_chord]
+            elif instrument_name == "StringInstrument":
+                notes = [note.Note(int(current_note), offset=offset) for current_note in notes_in_chord]
             new_chord = chord.Chord(notes)
             new_chord.offset = offset
-            song_notes.append(new_chord)
+            if instrument_name is None or instrument_name == "Acoustic Grand Piano":
+                piano_notes.append(new_chord)
+            elif instrument_name == "StringInstrument":
+                violin_notes.append(new_chord)
         else:
-            new_note = note.Note(item, offset=offset, storedInstrument=instrument.Piano())
-            song_notes.append(new_note)
-
+            if instrument_name is None or instrument_name == "Acoustic Grand Piano":
+                new_note = note.Note(item, offset=offset)
+                piano_notes.append(new_note)
+            elif instrument_name == "StringInstrument":
+                new_note = note.Note(item, offset=offset)
+                violin_notes.append(new_note)
         offset += 0.5
 
-    midi_stream = stream.Stream(song_notes)
-    midi_stream.write('midi', fp='{}.mid'.format(filename))
+    # Create separate parts for each instrument
+    piano_stream = stream.Part(piano_notes)
+    piano_stream.insert(0, instrument.Piano())
 
-    return midi_stream
+    violin_stream = stream.Part(violin_notes)
+    violin_stream.insert(0, instrument.Violin())
+
+    # Combine the parts into a single Stream
+    midi_stream = stream.Stream()
+    midi_stream.append(piano_stream)
+    if violin_stream:  # Only append if violin_stream is not empty
+        midi_stream.append(violin_stream)
+
+    midi_stream.write('midi', fp='{}.mid'.format(filename))
 
 ##############################
 ### PITCH HELPER FUNCTIONS ###

@@ -119,42 +119,46 @@ def wasserstein_loss(y_true, y_pred):
 
 def build_generator():
     model = models.Sequential()
-    model.add(layers.Dense(256, input_dim=LATENT_DIMENSION))
-    model.add(layers.LeakyReLU(alpha=0.1))
-    model.add(layers.BatchNormalization())
-    model.add(layers.Dropout(0.4))
-    model.add(layers.Dense(256))
-    model.add(layers.LeakyReLU(alpha=0.1))
-    model.add(layers.BatchNormalization())
-    model.add(layers.Dropout(0.4))
-    model.add(layers.Dense(512))
-    model.add(layers.LeakyReLU(alpha=0.1))
-    model.add(layers.BatchNormalization())
-    model.add(layers.Dropout(0.4))
-    model.add(layers.Dense(np.prod(SEQUENCE_SHAPE), activation='sigmoid')) #Sigmoid if Frequency, Tanh if Note
-    model.add(layers.Reshape(SEQUENCE_SHAPE))
     noise = layers.Input(shape=(LATENT_DIMENSION,))
+    model = models.Sequential([
+        noise,
+        layers.Dense(256),
+        layers.LeakyReLU(negative_slope=0.1),
+        layers.BatchNormalization(),
+        layers.Dropout(0.4),
+        layers.Dense(256),
+        layers.LeakyReLU(negative_slope=0.1),
+        layers.BatchNormalization(),
+        layers.Dropout(0.4),
+        layers.Dense(512),
+        layers.LeakyReLU(negative_slope=0.1),
+        layers.BatchNormalization(),
+        layers.Dropout(0.4),
+        layers.Dense(np.prod(SEQUENCE_SHAPE), activation='sigmoid'),
+        layers.Reshape(SEQUENCE_SHAPE)
+    ])
     seq = model(noise)
-
     return models.Model(noise, seq)
 
 def build_discriminator():
-    model = models.Sequential()
-    model.add(layers.LSTM(512, input_shape=SEQUENCE_SHAPE, return_sequences=True))
-    model.add(layers.Bidirectional(layers.LSTM(512)))
-    model.add(layers.Dense(512))
-    model.add(layers.LeakyReLU(alpha=0.2))
-    model.add(layers.Dropout(0.4))
-    model.add(layers.Dense(256))
-    model.add(layers.LeakyReLU(alpha=0.2))
-    model.add(layers.Dropout(0.4))
-    model.add(layers.Dense(128))
-    model.add(layers.LeakyReLU(alpha=0.2))
-    model.add(layers.Dropout(0.4))
-    model.add(layers.Dense(1, activation='sigmoid'))
     sequence = layers.Input(shape=SEQUENCE_SHAPE)
-    validity = model(sequence)
+    model = models.Sequential([
+        sequence,
+        layers.LSTM(512, return_sequences=True),
+        layers.Bidirectional(layers.LSTM(512)),
+        layers.Dense(512),
+        layers.LeakyReLU(negative_slope=0.2),
+        layers.Dropout(0.4),
+        layers.Dense(256),
+        layers.LeakyReLU(negative_slope=0.2),
+        layers.Dropout(0.4),
+        layers.Dense(128),
+        layers.LeakyReLU(negative_slope=0.2),
+        layers.Dropout(0.4),
+        layers.Dense(1, activation='sigmoid')
+    ])
 
+    validity = model(sequence)
     return models.Model(sequence, validity)
 
 def build_gan(generator, discriminator):
