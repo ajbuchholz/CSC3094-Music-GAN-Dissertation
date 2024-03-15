@@ -73,7 +73,7 @@
 					</section>
 					<section data-auto-animate>
 						<h2>Aims & Objectives</h2>
-						<ul style="font-size: 18px; list-style: none;">
+						<ul style="font-size: 22px; list-style: none;">
 							<li><u>Objective #1:</u> Create a RNN that can “accurately” predict the next note in a sequence.</li>
 							<li><u>Objective #2:</u> Experiment with different normalisation methods for the RNN model (Chords and Notes).</li>
 							<li><u>Objective #3:</u> Create a GAN using a generator and discriminator that “compete” against one another to create music.</li>
@@ -83,7 +83,7 @@
 					</section>
 					<section data-auto-animate>
 						<h2>Aims & Objectives</h2>
-						<ul style="font-size: 18px; list-style: none; display: inline-block;" id="objectivesList">
+						<ul style="font-size: 22px; list-style: none; display: inline-block;" id="objectivesList">
 							<div style="display: flex; align-items: center;">
 								<span style="margin-right: 8px;"><i style="color: rgba(160, 160, 160, 0.872);" class="fa-solid fa-wrench fa-fw"></i></span>
 								<li><u>Objective #4:</u> Modify the GAN model in "Objective #3" to work with multiple instruments and genres of music.</li>
@@ -135,6 +135,18 @@
 							<img src="https://static.thenounproject.com/png/374559-200.png" style="width: 10%; filter: invert(100%);" alt="Pretty MIDI">
 						</div>
 					</section>
+					<section>
+						<h3>How do MIDI files work?</h3>
+						<div class="fragment zoom-in">
+							<div style="width: 100%;">
+								<blockquote style="width:auto; margin: 12px; padding: 24px; font-size: 26px; text-align: left;">
+									- MIDI files do not contain the recorded sound but rather the instructions on what note to play and when. <br>
+									- MIDI files contain header and track chunks. <br>
+									- MIDI files are made up of "Note On" and "Note Off" events.
+								</blockquote>
+							</div>
+						</div>
+					</section>
 				</section>
 				
 				<!-- Literature Review/Sources -->
@@ -144,9 +156,9 @@
 						<blockquote class="fragment zoom-in" style="width:auto; margin: 12px; padding: 24px; font-size: 26px;">
 							There are many papers that have been written on the subject of music generation using machine learning. The most notable papers to my project are: 
 							<ul class="fragment fade-in" ="font-size: 20px;">
-								<li><a href="https://www.tensorflow.org/tutorials/audio/music_generation#setup">Generate Music with a RNN [1]</a></li>
-								<li><a href="https://research.google/pubs/music-transformer-generating-music-with-long-term-structure/ ">Music Transformer: Generating Music with Long-Term Structure [2]</a></li>
-								<li><a href="https://salu133445.github.io/musegan/pdf/musegan-aaai2018-paper.pdf">MuseGAN: Multi-Track Sequential Generative Adversarial Networks for Symbolic Music Generation and Accompaniment [3]</a></li>
+								<li><a href="https://www.tensorflow.org/tutorials/audio/music_generation#setup">Generate Music with a RNN [1] </a> (RNN-Pitch Model)</li>
+								<li><a href="https://research.google/pubs/music-transformer-generating-music-with-long-term-structure/ ">Music Transformer: Generating Music with Long-Term Structure [2]</a> (Transformer Model)</li>
+								<li><a href="https://salu133445.github.io/musegan/pdf/musegan-aaai2018-paper.pdf">MuseGAN: Multi-Track Sequential Generative Adversarial Networks for Symbolic Music Generation and Accompaniment [3]</a> (GAN and Multi-Track GAN Model)</li>
 							</ul>
 						</blockquote>
 					</div>
@@ -181,6 +193,21 @@
 						<h3>RNN-Pitch Model</h3>
 						<p style="font-size: 22px">The RNN-Pitch Model works by estimating three values: pitch, duration, and step.</p>
 						<img style="filter: invert(100);" class="fragment zoom-in" src="static/rnn-pitch.png">
+					</section>
+					<section>
+						<h4>RNN-Pitch Model (Pitch, Duration, and Step)</h4>
+						<pre class="fragment zoom-in">
+							<code data-trim data-noescape style="font-size: 18px;">
+								[[pitch, step, duration], [60, 0.25, 0.5], [67, 0.25, 0.5], [69, 0.15, 0.5], ...]
+							</code>
+						</pre>
+						<i class="fas fa-arrow-down fragment zoom-in"></i>
+						<pre class="fragment zoom-in">
+							<code data-trim data-noescape style="font-size: 18px;">
+								[61, 0, 0.5]
+							</code>
+						</pre>
+						<p class="fragment zoom-in" style="font-size: 22px;">The primary issue with the RNN-Pitch Model was that it was unable to accurately predict timing intervals between notes (step and duration).</p>
 					</section>
 					<section>
 						<h3>RNN-Pitch Model Example</h3>
@@ -313,13 +340,27 @@
 						<blockquote class="fragment zoom-in" style="width:auto; margin: 12px; padding: 24px; font-size: 26px;">
 							<ul class="fragment fade-in" ="font-size: 20px;">
 								<li>Modify the GAN model to work with multiple instruments.</li>
-								<li>Continue working on the dissertation writeup (Currently at ~9,000 words).</li>
+								<li>Continue working on the dissertation writeup (Currently at ~10,000 words).</li>
 								<li>Finalise poster and submit before the end of spring break.</li>
 							</ul>
 						</blockquote>
 					</div>
 				</section>
 
+				<section>
+					<h3>Summary</h3>
+					<div class="r-stack">
+						<blockquote class="fragment zoom-in" style="width:auto; margin: 12px; padding: 24px; font-size: 26px;">
+							<ul class="fragment fade-in" ="font-size: 20px;">
+								<li>Finished the RNN Models (RNN-Pitch & Chord)</li>
+								<li>Finished the GAN Model</li>
+								<li>Finished the Transformer Model</li>
+								<li>Began writing the paper</li>
+							</ul>
+						<audio class="fragment zoom-in" controls src="static/rnn-chord-best.mp3" type="audio/mpeg"></audio>
+						</blockquote>
+					</div>
+				</section>
 
 				<!-- References -->
 				<section>
