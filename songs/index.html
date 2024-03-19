@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Model Results</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
+    <div class="container my-5">
+      <h1 class="text-center">Model Results</h1>
+      <h6 class="text-center mb-4">Adrian Buchholz</h6>
+      <div class="list-group">
+      </div>
+      <div class="mt-4">
+        <audio id="audioPlayer" controls></audio>
+      </div>
+    </div>
+
+    <script>
+      // Replace this with the actual list of your MP3 files
+      const mp3Files = ["rnn-pitch-gru.mp3", "rnn-pitch-lstm.mp3"];
+
+      const listGroup = document.querySelector(".list-group");
+      const audioPlayer = document.getElementById("audioPlayer");
+
+      // Get the initial song from the URL parameter
+      const urlParams = new URLSearchParams(window.location.search);
+      const initialSong = urlParams.get("song");
+
+      mp3Files.forEach((file) => {
+        const listItem = document.createElement("a");
+        listItem.href = "#";
+        listItem.className = "list-group-item list-group-item-action";
+        listItem.textContent = file;
+        listItem.addEventListener("click", () => {
+          audioPlayer.src = file;
+          audioPlayer.play();
+        });
+        listGroup.appendChild(listItem);
+
+        // If the current file matches the initial song, set the src and play it
+        if (file === initialSong) {
+          audioPlayer.src = file;
+          audioPlayer.play();
+        }
+      });
+    </script>
+  </body>
+</html>
